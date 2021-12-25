@@ -26,6 +26,7 @@ import java.util.UUID
  *
  * @param title title of the task
  * @param description description of the task
+ * @param priority priority of the task
  * @param isCompleted whether or not this task is completed
  * @param id id of the task
  */
@@ -33,6 +34,7 @@ import java.util.UUID
 data class Task @JvmOverloads constructor(
     @ColumnInfo(name = "title") var title: String = "",
     @ColumnInfo(name = "description") var description: String = "",
+    @ColumnInfo(name = "priority") var priority: String = "1",
     @ColumnInfo(name = "completed") var isCompleted: Boolean = false,
     @PrimaryKey @ColumnInfo(name = "entryid") var id: String = UUID.randomUUID().toString()
 ) {

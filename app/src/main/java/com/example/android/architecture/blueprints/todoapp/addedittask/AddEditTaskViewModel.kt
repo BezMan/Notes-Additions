@@ -37,6 +37,8 @@ class AddEditTaskViewModel(
     // Two-way databinding, exposing MutableLiveData
     val title = MutableLiveData<String>()
 
+    val priority = MutableLiveData<String>()
+
     // Two-way databinding, exposing MutableLiveData
     val description = MutableLiveData<String>()
 
@@ -89,6 +91,7 @@ class AddEditTaskViewModel(
 
     private fun onTaskLoaded(task: Task) {
         title.value = task.title
+        priority.value = task.priority
         description.value = task.description
         taskCompleted = task.isCompleted
         _dataLoading.value = false
@@ -103,6 +106,7 @@ class AddEditTaskViewModel(
     fun saveTask() {
         val currentTitle = title.value
         val currentDescription = description.value
+        val currentPriority = priority.value ?: "1"
 
         if (currentTitle == null || currentDescription == null) {
             _snackbarText.value = Event(R.string.empty_task_message)
@@ -115,9 +119,9 @@ class AddEditTaskViewModel(
 
         val currentTaskId = taskId
         if (isNewTask || currentTaskId == null) {
-            createTask(Task(currentTitle, currentDescription))
+            createTask(Task(currentTitle, currentDescription, currentPriority))
         } else {
-            val task = Task(currentTitle, currentDescription, taskCompleted, currentTaskId)
+            val task = Task(currentTitle, currentDescription, currentPriority, taskCompleted, currentTaskId)
             updateTask(task)
         }
     }

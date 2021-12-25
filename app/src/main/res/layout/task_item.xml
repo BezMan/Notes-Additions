@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -38,6 +39,16 @@
         android:paddingBottom="@dimen/list_item_padding"
         android:paddingTop="@dimen/list_item_padding"
         android:onClick="@{() -> viewmodel.openTask(task.id)}">
+
+        <TextView
+            android:id="@+id/main_priority"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:lines="1"
+            android:maxLength="1"
+            android:text="@{`` + task.priority}"
+            tools:text="3" />
 
         <CheckBox
             android:id="@+id/complete_checkbox"

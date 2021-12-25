@@ -79,8 +79,20 @@
 
                     <!-- android:paddingTop specified to temporarily work around -->
                     <!-- https://github.com/robolectric/robolectric/issues/4588 -->
+
+                    <TextView
+                        android:paddingTop="1dp"
+                        android:id="@+id/detail_priority"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:lines="1"
+                        android:maxLength="1"
+                        android:text="@{`` + viewmodel.priority}" />
+
                     <CheckBox
                         android:id="@+id/task_detail_complete_checkbox"
+                        android:layout_toEndOf="@id/detail_priority"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
