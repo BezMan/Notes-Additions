@@ -63,8 +63,8 @@ class TaskDetailViewModel(
         input?.isCompleted ?: false
     }
 
-    val priority: LiveData<String> = _task.map { input: Task? ->
-        input?.priority ?: "1"
+    val priority: LiveData<Int> = _task.map { input: Task? ->
+        input?.priority ?: 1
     }
 
     fun deleteTask() = viewModelScope.launch {

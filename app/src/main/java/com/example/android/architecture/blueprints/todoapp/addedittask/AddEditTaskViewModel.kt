@@ -37,7 +37,7 @@ class AddEditTaskViewModel(
     // Two-way databinding, exposing MutableLiveData
     val title = MutableLiveData<String>()
 
-    val priority = MutableLiveData<String>()
+    val priority = MutableLiveData<Int>()
 
     // Two-way databinding, exposing MutableLiveData
     val description = MutableLiveData<String>()
@@ -106,7 +106,7 @@ class AddEditTaskViewModel(
     fun saveTask() {
         val currentTitle = title.value
         val currentDescription = description.value
-        val currentPriority = priority.value ?: "1"
+        val currentPriority = priority.value ?: 1
 
         if (currentTitle == null || currentDescription == null) {
             _snackbarText.value = Event(R.string.empty_task_message)

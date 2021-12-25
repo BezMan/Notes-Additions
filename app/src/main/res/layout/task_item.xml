@@ -14,8 +14,7 @@
   ~ limitations under the License.
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -47,8 +46,7 @@
             android:layout_gravity="center"
             android:lines="1"
             android:maxLength="1"
-            android:text="@{`` + task.priority}"
-            tools:text="3" />
+            android:text="@{`` + task.priority}" />
 
         <CheckBox
             android:id="@+id/complete_checkbox"
