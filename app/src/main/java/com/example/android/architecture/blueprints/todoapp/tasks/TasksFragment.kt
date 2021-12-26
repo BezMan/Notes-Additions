@@ -16,6 +16,7 @@
 
 package com.example.android.architecture.blueprints.todoapp.tasks
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -24,6 +25,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -52,6 +54,8 @@ class TasksFragment : Fragment() {
 
     private lateinit var listAdapter: TasksAdapter
 
+    private var isPrioritySortedUp: Boolean = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -74,12 +78,26 @@ class TasksFragment : Fragment() {
                 showFilteringPopUpMenu()
                 true
             }
+            R.id.menu_priority -> {
+                toggleSortPriority(requireContext(), item)
+                true
+            }
             R.id.menu_refresh -> {
                 viewModel.loadTasks(true)
                 true
             }
             else -> false
         }
+
+
+    private fun toggleSortPriority(context: Context, item: MenuItem) {
+        if (isPrioritySortedUp) {
+            item.icon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_arrow_downward_24)
+        } else {
+            item.icon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_arrow_upward_24)
+        }
+        isPrioritySortedUp = !isPrioritySortedUp
+    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.tasks_fragment_menu, menu)
