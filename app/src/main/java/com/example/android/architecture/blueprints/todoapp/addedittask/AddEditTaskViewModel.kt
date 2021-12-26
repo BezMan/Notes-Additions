@@ -106,7 +106,9 @@ class AddEditTaskViewModel(
 
     fun openPriorityDialog(currPriority: Int?) {
         val newFragment = CustomDialogFragment(this, currPriority ?: 1)
-        newFragment.show(fragmentManager!!, "priority_dialog")
+        fragmentManager?.let {
+            newFragment.show(it, "priority_dialog")
+        }
     }
 
     override fun onPriorityDialogSaveCallback(newPriority: Int) {
