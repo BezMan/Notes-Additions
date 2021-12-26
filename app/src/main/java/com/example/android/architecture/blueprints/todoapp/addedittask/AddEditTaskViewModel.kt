@@ -16,6 +16,7 @@
 
 package com.example.android.architecture.blueprints.todoapp.addedittask
 
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,8 +32,9 @@ import kotlinx.coroutines.launch
  * ViewModel for the Add/Edit screen.
  */
 class AddEditTaskViewModel(
-    private val tasksRepository: TasksRepository
-) : ViewModel() {
+    private val tasksRepository: TasksRepository,
+    private val fragmentManager: FragmentManager? = null
+) : ViewModel(), CustomDialogFragment.OnPrioritySaveClickListener {
 
     // Two-way databinding, exposing MutableLiveData
     val title = MutableLiveData<String>()
@@ -91,7 +93,7 @@ class AddEditTaskViewModel(
 
     private fun onTaskLoaded(task: Task) {
         title.value = task.title
-        priority.value = task.priority
+        priority.value = task.priority ?: 1
         description.value = task.description
         taskCompleted = task.isCompleted
         _dataLoading.value = false
@@ -101,6 +103,16 @@ class AddEditTaskViewModel(
     private fun onDataNotAvailable() {
         _dataLoading.value = false
     }
+
+    fun openPriorityDialog(currPriority: Int?) {
+        val newFragment = CustomDialogFragment(this, currPriority ?: 1)
+        newFragment.show(fragmentManager!!, "priority_dialog")
+    }
+
+    override fun onPriorityDialogSaveCallback(newPriority: Int) {
+        priority.value = newPriority
+    }
+
 
     // Called when clicking on fab.
     fun saveTask() {
@@ -119,9 +131,9 @@ class AddEditTaskViewModel(
 
         val currentTaskId = taskId
         if (isNewTask || currentTaskId == null) {
-            createTask(Task(currentTitle, currentDescription, currentPriority))
+            createTask(Task(currentTitle, currentDescription, priority = currentPriority))
         } else {
-            val task = Task(currentTitle, currentDescription, currentPriority, taskCompleted, currentTaskId)
+            val task = Task(currentTitle, currentDescription, taskCompleted, currentTaskId, currentPriority)
             updateTask(task)
         }
     }

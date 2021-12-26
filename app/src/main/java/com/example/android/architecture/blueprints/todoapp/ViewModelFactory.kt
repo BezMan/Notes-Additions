@@ -16,6 +16,7 @@
 package com.example.android.architecture.blueprints.todoapp
 
 import android.os.Bundle
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -46,10 +47,30 @@ class ViewModelFactory constructor(
                 StatisticsViewModel(tasksRepository)
             isAssignableFrom(TaskDetailViewModel::class.java) ->
                 TaskDetailViewModel(tasksRepository)
-            isAssignableFrom(AddEditTaskViewModel::class.java) ->
-                AddEditTaskViewModel(tasksRepository)
             isAssignableFrom(TasksViewModel::class.java) ->
                 TasksViewModel(tasksRepository, handle)
+            else ->
+                throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+        }
+    } as T
+}
+
+@Suppress("UNCHECKED_CAST")
+class ViewModelFactoryWithFragmentManager constructor(
+    private val tasksRepository: TasksRepository,
+    owner: SavedStateRegistryOwner,
+    private val fragmentManager: FragmentManager,
+    defaultArgs: Bundle? = null
+) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+
+    override fun <T : ViewModel> create(
+        key: String,
+        modelClass: Class<T>,
+        handle: SavedStateHandle
+    ) = with(modelClass) {
+        when {
+            isAssignableFrom(AddEditTaskViewModel::class.java) ->
+                AddEditTaskViewModel(tasksRepository, fragmentManager)
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

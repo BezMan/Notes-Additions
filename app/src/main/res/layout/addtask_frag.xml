@@ -56,7 +56,8 @@
                         android:id="@+id/add_task_priority_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{@string/priority(viewmodel.priority)}"/>
+                        android:onClick="@{() -> viewmodel.openPriorityDialog(viewmodel.priority)}"
+                        android:text="@{@string/priority(viewmodel.priority ?? 1)}"/>
 
                     <EditText
                         android:id="@+id/add_task_title_edit_text"

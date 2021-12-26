@@ -41,7 +41,7 @@ class AddEditTaskFragment : Fragment() {
 
     private val args: AddEditTaskFragmentArgs by navArgs()
 
-    private val viewModel by viewModels<AddEditTaskViewModel> { getViewModelFactory() }
+    private val viewModel by viewModels<AddEditTaskViewModel> { getViewModelFactory(parentFragmentManager) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
