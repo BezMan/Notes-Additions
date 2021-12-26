@@ -97,6 +97,7 @@ class TasksFragment : Fragment() {
             item.icon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_arrow_upward_24)
         }
         isPrioritySortedUp = !isPrioritySortedUp
+        viewModel.changePriorityOrder(isPrioritySortedUp)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

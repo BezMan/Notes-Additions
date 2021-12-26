@@ -17,14 +17,7 @@ package com.example.android.architecture.blueprints.todoapp.tasks
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.distinctUntilChanged
-import androidx.lifecycle.switchMap
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.android.architecture.blueprints.todoapp.Event
 import com.example.android.architecture.blueprints.todoapp.R
 import com.example.android.architecture.blueprints.todoapp.data.Result
@@ -32,9 +25,7 @@ import com.example.android.architecture.blueprints.todoapp.data.Result.Success
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksDataSource
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepository
-import com.example.android.architecture.blueprints.todoapp.tasks.TasksFilterType.ACTIVE_TASKS
-import com.example.android.architecture.blueprints.todoapp.tasks.TasksFilterType.ALL_TASKS
-import com.example.android.architecture.blueprints.todoapp.tasks.TasksFilterType.COMPLETED_TASKS
+import com.example.android.architecture.blueprints.todoapp.tasks.TasksFilterType.*
 import kotlinx.coroutines.launch
 
 /**
@@ -45,7 +36,8 @@ class TasksViewModel(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _forceUpdate = MutableLiveData<Boolean>(false)
+    private val _forceUpdate = MutableLiveData(false)
+    private val _priorityAsc = MutableLiveData(false)
 
     private val _items: LiveData<List<Task>> = _forceUpdate.switchMap { forceUpdate ->
         if (forceUpdate) {
@@ -55,7 +47,10 @@ class TasksViewModel(
                 _dataLoading.value = false
             }
         }
-        tasksRepository.observeTasks().distinctUntilChanged().switchMap { filterTasks(it) }
+        tasksRepository.observeTasks().distinctUntilChanged().switchMap {
+            val filterTasks = filterTasks(it)
+            sortTasks(filterTasks.value)
+        }
     }
 
     val items: LiveData<List<Task>> = _items
@@ -192,6 +187,20 @@ class TasksViewModel(
         _snackbarText.value = Event(message)
     }
 
+
+    private fun sortTasks(filteredTasks: List<Task>?): LiveData<List<Task>> {
+        val result = MutableLiveData<List<Task>>()
+        val sortedByPriority = filteredTasks?.sortedBy { it.priority }
+        if(_priorityAsc.value == true) {
+            result.value = sortedByPriority ?: emptyList()
+        } else {
+            result.value = sortedByPriority?.reversed()
+
+        }
+        return result
+    }
+
+
     private fun filterTasks(tasksResult: Result<List<Task>>): LiveData<List<Task>> {
         // TODO: This is a good case for liveData builder. Replace when stable.
         val result = MutableLiveData<List<Task>>()
@@ -236,6 +245,11 @@ class TasksViewModel(
 
     fun refresh() {
         _forceUpdate.value = true
+    }
+
+    fun changePriorityOrder(isPrioritySortedUp: Boolean) {
+        _priorityAsc.value = isPrioritySortedUp
+        refresh()
     }
 
     private fun getSavedFilterType(): TasksFilterType {

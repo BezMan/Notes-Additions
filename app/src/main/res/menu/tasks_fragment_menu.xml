@@ -19,7 +19,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_priority"
-        android:title="@string/menu_filter"
+        android:title="@string/menu_priority"
         android:icon="@drawable/ic_baseline_arrow_downward_24"
         app:showAsAction="always" />
     <item
