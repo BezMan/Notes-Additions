@@ -23,14 +23,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.android.architecture.blueprints.todoapp.TodoApplication
 import com.example.android.architecture.blueprints.todoapp.ViewModelFactory
-import com.example.android.architecture.blueprints.todoapp.ViewModelFactoryWithFragmentManager
 
-fun Fragment.getViewModelFactory(): ViewModelFactory {
+fun Fragment.getViewModelFactory(fragmentManager: FragmentManager? = null): ViewModelFactory {
     val repository = (requireContext().applicationContext as TodoApplication).taskRepository
-    return ViewModelFactory(repository, this)
-}
-
-fun Fragment.getViewModelFactory(fragmentManager: FragmentManager): ViewModelFactoryWithFragmentManager {
-    val repository = (requireContext().applicationContext as TodoApplication).taskRepository
-    return ViewModelFactoryWithFragmentManager(repository, this, fragmentManager)
+    return ViewModelFactory(repository, this, fragmentManager)
 }
