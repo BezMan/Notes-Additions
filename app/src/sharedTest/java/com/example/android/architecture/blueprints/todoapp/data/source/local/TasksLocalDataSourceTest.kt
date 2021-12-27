@@ -77,7 +77,7 @@ class TasksLocalDataSourceTest {
     @Test
     fun saveTask_retrievesTask() = runBlockingTest {
         // GIVEN - a new task saved in the database
-        val newTask = Task("title", "description", true)
+        val newTask = Task("title", "description", true, priority = 2)
         localDataSource.saveTask(newTask)
 
         // WHEN  - Task retrieved by ID
@@ -88,6 +88,7 @@ class TasksLocalDataSourceTest {
         result as Success
         assertThat(result.data.title, `is`("title"))
         assertThat(result.data.description, `is`("description"))
+        assertThat(result.data.priority, `is`(2))
         assertThat(result.data.isCompleted, `is`(true))
     }
 

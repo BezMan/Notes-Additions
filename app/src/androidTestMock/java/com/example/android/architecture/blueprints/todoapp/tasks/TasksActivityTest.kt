@@ -114,12 +114,45 @@ class TasksActivityTest {
         onView(withText("TITLE1")).perform(click())
         onView(withId(R.id.task_detail_title_text)).check(matches(withText("TITLE1")))
         onView(withId(R.id.task_detail_description_text)).check(matches(withText("DESCRIPTION")))
+        onView(withId(R.id.detail_priority)).check(matches(withText("1")))
         onView(withId(R.id.task_detail_complete_checkbox)).check(matches(not(isChecked())))
 
         // Click on the edit button, edit, and save
         onView(withId(R.id.edit_task_fab)).perform(click())
         onView(withId(R.id.add_task_title_edit_text)).perform(replaceText("NEW TITLE"))
         onView(withId(R.id.add_task_description_edit_text)).perform(replaceText("NEW DESCRIPTION"))
+        onView(withId(R.id.add_task_priority_text)).check(matches(withText("Priority 1")))
+        onView(withId(R.id.save_task_fab)).perform(click())
+
+        // Verify task is displayed on screen in the task list.
+        onView(withText("NEW TITLE")).check(matches(isDisplayed()))
+        // Verify previous task is not displayed
+        onView(withText("TITLE1")).check(doesNotExist())
+        // Make sure the activity is closed before resetting the db:
+        activityScenario.close()
+    }
+
+    @Test
+    fun createWithPriority_isSetCorrectly() {
+        val priority = 2
+        repository.saveTaskBlocking(Task("TITLE1", "DESCRIPTION", priority = priority))
+
+        // start up Tasks screen
+        val activityScenario = ActivityScenario.launch(TasksActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(activityScenario)
+
+        // Click on the task on the list and verify that all the data is correct
+        onView(withText("TITLE1")).perform(click())
+        onView(withId(R.id.task_detail_title_text)).check(matches(withText("TITLE1")))
+        onView(withId(R.id.task_detail_description_text)).check(matches(withText("DESCRIPTION")))
+        onView(withId(R.id.detail_priority)).check(matches(withText("$priority")))
+        onView(withId(R.id.task_detail_complete_checkbox)).check(matches(not(isChecked())))
+
+        // Click on the edit button, edit, and save
+        onView(withId(R.id.edit_task_fab)).perform(click())
+        onView(withId(R.id.add_task_title_edit_text)).perform(replaceText("NEW TITLE"))
+        onView(withId(R.id.add_task_description_edit_text)).perform(replaceText("NEW DESCRIPTION"))
+        onView(withId(R.id.add_task_priority_text)).check(matches(withText("Priority $priority")))
         onView(withId(R.id.save_task_fab)).perform(click())
 
         // Verify task is displayed on screen in the task list.
