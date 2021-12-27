@@ -16,14 +16,8 @@
 
 package com.example.android.architecture.blueprints.todoapp.tasks
 
-import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -79,7 +73,7 @@ class TasksFragment : Fragment() {
                 true
             }
             R.id.menu_priority -> {
-                toggleSortPriority(requireContext(), item)
+                toggleSortPriority(item)
                 true
             }
             R.id.menu_refresh -> {
@@ -90,12 +84,9 @@ class TasksFragment : Fragment() {
         }
 
 
-    private fun toggleSortPriority(context: Context, item: MenuItem) {
-        if (isPrioritySortedUp) {
-            item.icon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_arrow_downward_24)
-        } else {
-            item.icon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_arrow_upward_24)
-        }
+    private fun toggleSortPriority(item: MenuItem) {
+        val iconRes = if (isPrioritySortedUp) R.drawable.ic_baseline_arrow_downward_24 else R.drawable.ic_baseline_arrow_upward_24
+        item.icon = ContextCompat.getDrawable(requireContext(), iconRes)
         isPrioritySortedUp = !isPrioritySortedUp
         viewModel.changePriorityOrder(isPrioritySortedUp)
     }
